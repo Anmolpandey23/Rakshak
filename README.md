@@ -75,6 +75,86 @@ It provides real-time worker tracking, pre-entry approval flows, alert timelines
 	- Global error boundary fallback
 	- Theme-aware chart colors and cross-theme surface contrast tuning
 
+## Health Detection Logic (Biometric Anomaly)
+
+RAKSHAK uses a rule-based biometric classifier (in `src/utils/healthClassifier.js`) that converts live wearable vitals into actionable health states.
+
+### Inputs Used
+- Heart rate (`hr`)
+- Blood oxygen (`spo2`)
+- Body temperature (`temperature`)
+- Immobility duration (`immobilitySeconds`)
+- Previous `spo2` (for rapid-drop pattern)
+
+### State Classification Rules
+- `CRITICAL` when any of the following is true:
+	- Collapse pattern: `hr >= 130`, `spo2 drop >= 2`, `spo2 <= 90`, and `immobilitySeconds >= 30`
+	- `hr >= 145`
+	- `spo2 <= 86`
+	- `temperature >= 39.2`
+
+- `DISTRESSED` when any of the following is true:
+	- `hr >= 125`
+	- `spo2 <= 91`
+	- `temperature >= 38.5`
+	- `immobilitySeconds >= 25`
+
+- `STRESSED` when any of the following is true:
+	- `hr >= 108`
+	- `spo2 <= 95`
+	- `temperature >= 37.7`
+
+- Otherwise: `NORMAL`
+
+### Severity Mapping
+- `CRITICAL` -> `CRITICAL`
+- `DISTRESSED` -> `DANGER`
+- `STRESSED` -> `WARNING`
+- `NORMAL` -> `NORMAL`
+
+This status is merged with gas-based severity to derive the final live worker severity shown on cards/map.
+
+## Pre-Entry Risk Score Logic (AI-Assisted Gate Decision)
+
+RAKSHAK computes an explainable risk score (in `src/utils/preEntryRiskClassifier.js`) before gate entry approval.
+
+### Inputs Used
+- Multi-gas scan readings (`H2S`, `CH4`, `CO`, `O2`, `NH3`)
+- Historical risk score (`historicalRiskScore`, normalized to 0-100)
+- Incident count (`incidentCount`)
+- Seasonal adjustment factor (`seasonalFactor`)
+
+### Step 1: Gas Scan Risk
+Each gas contributes severity points using threshold bands from `GAS_THRESHOLDS`:
+- Critical breach: `+30`
+- Danger breach: `+22`
+- Warning breach: `+14`
+- Safe range: `+4`
+
+For inverse-threshold gases like oxygen, lower values are riskier.
+
+Composite gas risk:
+- `scanRisk = round(totalPoints / 5)`
+
+### Step 2: Derived Factors
+- `historical = clamp(round(historicalRiskScore * 100), 0, 100)`
+- `incidentRisk = clamp(incidentCount * 7, 0, 35)`
+- `seasonalRisk = clamp(round((seasonalFactor - 1) * 20), -10, 20)`
+
+### Step 3: Final AI Risk Score
+
+`score = clamp(round(scanRisk * 0.52 + historical * 0.28 + incidentRisk + seasonalRisk), 0, 100)`
+
+### Step 4: Classification
+- `score >= 70` -> `DANGEROUS`
+- `score >= 40` and `< 70` -> `CAUTION`
+- `< 40` -> `SAFE`
+
+### Operational Behavior in UI
+- DANGEROUS approvals require explicit supervisor override confirmation.
+- Approval actions store approver identity and timestamp in UI state.
+- Factor breakdown (`scanRisk`, `historical`, `incidentRisk`, `seasonalRisk`) is shown for explainability.
+
 ## Application Routes
 
 - `/` -> Live Monitoring

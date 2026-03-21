@@ -199,9 +199,31 @@ html:not([data-theme='dark']) .text-violet-200 {
   color: #5b21b6 !important;
 }
 
+html[data-theme='light'] .text-violet-200\/90,
+html[data-theme='light'] .text-violet-200\/80,
+html:not([data-theme='dark']) .text-violet-200\/90,
+html:not([data-theme='dark']) .text-violet-200\/80 {
+  color: #6d28d9 !important;
+}
+
+html[data-theme='light'] .text-amber-200\/70,
+html:not([data-theme='dark']) .text-amber-200\/70 {
+  color: #9a3412 !important;
+}
+
+html[data-theme='light'] .text-emerald-200\/70,
+html:not([data-theme='dark']) .text-emerald-200\/70 {
+  color: #065f46 !important;
+}
+
 html[data-theme='light'] .text-emerald-300,
 html:not([data-theme='dark']) .text-emerald-300 {
   color: #047857 !important;
+}
+
+html[data-theme='light'] .text-emerald-100,
+html:not([data-theme='dark']) .text-emerald-100 {
+  color: #064e3b !important;
 }
 
 html[data-theme='light'] .text-emerald-200,
@@ -209,9 +231,21 @@ html:not([data-theme='dark']) .text-emerald-200 {
   color: #065f46 !important;
 }
 
+html[data-theme='light'] .text-emerald-200\/90,
+html[data-theme='light'] .text-emerald-200\/80,
+html:not([data-theme='dark']) .text-emerald-200\/90,
+html:not([data-theme='dark']) .text-emerald-200\/80 {
+  color: #065f46 !important;
+}
+
 html[data-theme='light'] .border-emerald-500\/30,
 html:not([data-theme='dark']) .border-emerald-500\/30 {
   border-color: rgba(16, 185, 129, 0.38) !important;
+}
+
+html[data-theme='light'] .border-emerald-500\/25,
+html:not([data-theme='dark']) .border-emerald-500\/25 {
+  border-color: rgba(16, 185, 129, 0.34) !important;
 }
 
 html[data-theme='light'] .border-amber-500\/30,
@@ -360,4 +394,29 @@ html:not([data-theme='dark']) .ack-btn:disabled {
   background: #e2e8f0;
   color: #64748b;
   cursor: not-allowed;
+}
+
+/* AI pre-entry explanatory text contrast */
+.ai-risk-title {
+  color: #ddd6fe;
+}
+
+.ai-risk-body {
+  color: #c4b5fd;
+}
+
+.ai-risk-meta {
+  color: #a78bfa;
+}
+
+html:not([data-theme='dark']) .ai-risk-title {
+  color: #5b21b6;
+}
+
+html:not([data-theme='dark']) .ai-risk-body {
+  color: #6d28d9;
+}
+
+html:not([data-theme='dark']) .ai-risk-meta {
+  color: #7c3aed;
 }

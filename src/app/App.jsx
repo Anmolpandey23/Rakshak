@@ -20,18 +20,27 @@ const applyThemePreference = (themePreference) => {
   document.documentElement.dataset.theme = resolved;
 };
 
+const readSettings = () => {
+  try {
+    const raw = localStorage.getItem('rakshak.settings');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
 function Layout() {
   const { openCount } = useAlerts();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem('rakshak.settings') || 'null');
+    const saved = readSettings();
     const preference = saved?.theme || 'light';
     applyThemePreference(preference);
 
     const media = window.matchMedia('(prefers-color-scheme: dark)');
     const onSystemThemeChange = () => {
-      const latest = JSON.parse(localStorage.getItem('rakshak.settings') || 'null');
+      const latest = readSettings();
       if ((latest?.theme || 'light') === 'auto') {
         applyThemePreference('auto');
       }

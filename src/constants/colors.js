@@ -1,6 +1,10 @@
 export const SEVERITY_COLORS = {
   NORMAL: '#10B981',
+  STRESSED: '#F59E0B',
+  DISTRESSED: '#EF4444',
   SAFE: '#10B981',
+  CAUTION: '#F59E0B',
+  DANGEROUS: '#EF4444',
   WARNING: '#F59E0B',
   DANGER: '#EF4444',
   CRITICAL: '#7C3AED',
@@ -10,7 +14,11 @@ export const SEVERITY_COLORS = {
 
 export const SEVERITY_TAILWIND = {
   NORMAL: 'text-emerald-400 border-emerald-500/50 bg-emerald-500/10',
+  STRESSED: 'text-amber-300 border-amber-500/50 bg-amber-500/10',
+  DISTRESSED: 'text-red-300 border-red-500/50 bg-red-500/10',
   SAFE: 'text-emerald-400 border-emerald-500/50 bg-emerald-500/10',
+  CAUTION: 'text-amber-300 border-amber-500/50 bg-amber-500/10',
+  DANGEROUS: 'text-red-300 border-red-500/50 bg-red-500/10',
   WARNING: 'text-amber-300 border-amber-500/50 bg-amber-500/10',
   DANGER: 'text-red-300 border-red-500/50 bg-red-500/10',
   CRITICAL: 'text-violet-300 border-violet-500/50 bg-violet-500/10',

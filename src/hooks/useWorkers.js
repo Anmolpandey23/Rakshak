@@ -1,24 +1,48 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { classifyHealth } from '../utils/healthClassifier';
+import { biometricToSeverity, classifyBiometricHealth } from '../utils/healthClassifier';
 import { workerService } from '../services/workerService';
 
 const mergeWithLivePayload = (worker, payload) => {
   if (worker.id !== payload.workerId) return worker;
 
-  const nextHealthSeverity = classifyHealth({ ...worker.health });
-  const maxSeverity =
+  const nextHealth = {
+    ...worker.health,
+    ...(payload.health || {})
+  };
+
+  const healthStatus = classifyBiometricHealth({
+    current: nextHealth,
+    previous: worker.health,
+    immobilitySeconds: payload.immobilitySeconds || 0
+  });
+
+  const gasSeverity =
     payload.gases.CO > 110 || payload.gases.H2S > 28 || payload.gases.O2 < 16.8
       ? 'CRITICAL'
       : payload.gases.CO > 70 || payload.gases.H2S > 20 || payload.gases.O2 < 18
         ? 'DANGER'
         : payload.gases.CO > 35 || payload.gases.H2S > 10 || payload.gases.O2 < 19.5
           ? 'WARNING'
-          : nextHealthSeverity;
+          : 'NORMAL';
+
+  const healthSeverity = biometricToSeverity(healthStatus);
+  const maxSeverity =
+    gasSeverity === 'CRITICAL' || healthSeverity === 'CRITICAL'
+      ? 'CRITICAL'
+      : gasSeverity === 'DANGER' || healthSeverity === 'DANGER'
+        ? 'DANGER'
+        : gasSeverity === 'WARNING' || healthSeverity === 'WARNING'
+          ? 'WARNING'
+          : 'NORMAL';
 
   return {
     ...worker,
     updatedAt: payload.updatedAt,
     battery: Math.max(0, worker.battery + (payload.batteryDelta || 0)),
+    health: nextHealth,
+    healthStatus,
+    immobilitySeconds: payload.immobilitySeconds || 0,
+    emergencySignal: healthStatus === 'DISTRESSED' || healthStatus === 'CRITICAL',
     gases: {
       ...worker.gases,
       ...payload.gases

@@ -19,9 +19,22 @@ dist-ssr
 
 # Caches and temporary files
 .cache/
+.vite/
+.parcel-cache/
 .eslintcache
 .stylelintcache
 *.tsbuildinfo
+*.tmp
+*.temp
+*.pid
+
+# Package manager local caches
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
 
 # Test and coverage output
 coverage/
@@ -29,6 +42,7 @@ coverage/
 
 # Deployment/platform folders
 .netlify/
+.vercel/
 
 # Editor directories and files
 .vscode/*

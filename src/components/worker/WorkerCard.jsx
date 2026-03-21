@@ -53,6 +53,12 @@ export default function WorkerCard({
         </div>
       )}
 
+      {worker.emergencySignal ? (
+        <div className="mt-2 rounded-lg border border-red-500/50 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200">
+          Emergency Signal: Biometric anomaly detected. Immediate supervisor intervention required.
+        </div>
+      ) : null}
+
       <div className="mt-3 grid grid-cols-5 gap-2">
         {Object.entries(worker.gases).map(([name, value]) => (
           <GasTile key={name} name={name} value={value} />
@@ -60,7 +66,11 @@ export default function WorkerCard({
       </div>
 
       <div className="mt-3">
-        <HealthStats health={worker.health} />
+        <HealthStats
+          health={worker.health}
+          healthStatus={worker.healthStatus}
+          immobilitySeconds={worker.immobilitySeconds}
+        />
       </div>
 
       <div className="mt-3 flex gap-2">

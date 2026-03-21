@@ -27,7 +27,7 @@ export const useAlerts = () => {
     const nextAlert = {
       id: `AL-RT-${Date.now()}`,
       workerId: payload.workerId,
-      workerName: payload.workerId,
+      workerName: payload.workerName || payload.workerId,
       severity: payload.severity,
       status: 'OPEN',
       type: payload.type,
