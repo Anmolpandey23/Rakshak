@@ -217,7 +217,7 @@ npm run build
 npm run preview
 ```
 
-## Deployment (Netlify)
+## Deployment (Netlify: https://cerulean-taffy-ba9479.netlify.app/)
 
 Netlify SPA routing is configured through `netlify.toml`:
 
